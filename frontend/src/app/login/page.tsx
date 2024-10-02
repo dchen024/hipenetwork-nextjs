@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from '@/components/ui/card'; // Import Card components
+} from '@/components/ui/card';
 import { useState } from 'react';
 
 export default function Login() {
@@ -18,8 +18,40 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Function to handle email/password login
+  const isEmailValid = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isPasswordValid = (password: string) => {
+    const minLength = 8;
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasDigit = /\d/.test(password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasLowercase &&
+      hasUppercase &&
+      hasDigit &&
+      hasSymbol
+    );
+  };
+
   const handleLogin = async () => {
+    if (!isEmailValid(email)) {
+      setError('Invalid email format');
+      return;
+    }
+
+    if (!isPasswordValid(password)) {
+      setError(
+        'Password must be at least 8 characters long and include lowercase, uppercase letters, digits, and symbols'
+      );
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -61,12 +93,14 @@ export default function Login() {
             placeholder='Email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={!email ? 'border-red-500' : ''}
           />
           <Input
             type='password'
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={!password ? 'border-red-500' : ''}
           />
 
           {error && <p className='text-red-500 text-sm'>{error}</p>}
