@@ -6,12 +6,14 @@
 - add Logo to GitHub App Page
 - change from app to oauth only
 - app url cant be localhost
+- add github logo for oauth button
 
 ## Google
 
 - change Homepage URL when deploying
 - add Logo to Google App
 - change publishing status to allow external google accounts
+- add google logo for oauth button
 
 # Login
 
