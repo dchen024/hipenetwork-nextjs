@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { supabase } from '../../lib/supabaseClient';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { supabase } from "../../../lib/supabaseClient";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { useState } from 'react';
+} from "@/components/ui/card";
+import { useState } from "react";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,13 +41,13 @@ export default function Login() {
 
   const handleLogin = async () => {
     if (!isEmailValid(email)) {
-      setError('Invalid email format');
+      setError("Invalid email format");
       return;
     }
 
     if (!isPasswordValid(password)) {
       setError(
-        'Password must be at least 8 characters long and include lowercase, uppercase letters, digits, and symbols'
+        "Password must be at least 8 characters long and include lowercase, uppercase letters, digits, and symbols",
       );
       return;
     }
@@ -68,7 +68,7 @@ export default function Login() {
   };
 
   // Function to handle OAuth login (GitHub, Google)
-  const handleOAuthLogin = async (provider: 'github' | 'google') => {
+  const handleOAuthLogin = async (provider: "github" | "google") => {
     const { error } = await supabase.auth.signInWithOAuth({ provider });
 
     if (error) {
@@ -77,58 +77,58 @@ export default function Login() {
   };
 
   return (
-    <div className='flex items-center justify-center h-screen'>
+    <div className="flex h-screen items-center justify-center">
       {/* Card component wrapping the login form */}
-      <Card className='w-full max-w-md'>
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className='text-2xl font-semibold text-center mb-4'>
+          <CardTitle className="mb-4 text-center text-2xl font-semibold">
             Login
           </CardTitle>
         </CardHeader>
 
-        <CardContent className='space-y-4'>
+        <CardContent className="space-y-4">
           {/* Form for Email/Password Login */}
           <Input
-            type='email'
-            placeholder='Email'
+            type="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={!email ? 'border-red-500' : ''}
+            className={!email ? "border-red-500" : ""}
           />
           <Input
-            type='password'
-            placeholder='Password'
+            type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={!password ? 'border-red-500' : ''}
+            className={!password ? "border-red-500" : ""}
           />
 
-          {error && <p className='text-red-500 text-sm'>{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <Button
-            variant='default'
+            variant="default"
             onClick={handleLogin}
             disabled={loading}
-            className='w-full'
+            className="w-full"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </CardContent>
 
-        <CardFooter className='flex flex-col space-y-4'>
+        <CardFooter className="flex flex-col space-y-4">
           {/* OAuth Buttons for GitHub and Google */}
           <Button
-            variant='outline'
-            onClick={() => handleOAuthLogin('github')}
-            className='w-full'
+            variant="outline"
+            onClick={() => handleOAuthLogin("github")}
+            className="w-full"
           >
             Sign in with GitHub
           </Button>
 
           <Button
-            variant='outline'
-            onClick={() => handleOAuthLogin('google')}
-            className='w-full'
+            variant="outline"
+            onClick={() => handleOAuthLogin("google")}
+            className="w-full"
           >
             Sign in with Google
           </Button>
