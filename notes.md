@@ -28,3 +28,9 @@
 - update slides for business people to understand
 - get 5 test users after week 4-5
 - start to think about deployment maybe even a computer at ccny
+
+Oct 9 2024
+
+- add linkedin auth
+- create profile form
+- create post component
