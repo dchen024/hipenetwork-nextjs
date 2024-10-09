@@ -1,5 +1,7 @@
 import { Menu } from "@/types/menu";
 
+// ! FIX ME
+
 const menuData: Menu[] = [
   {
     id: 1,
@@ -14,66 +16,41 @@ const menuData: Menu[] = [
     path: "/#features",
   },
   {
-    id: 2.1,
-    title: "Blog",
-    newTab: false,
-    path: "/blog",
-  },
-  {
-    id: 2.3,
-    title: "Docs",
-    newTab: false,
-    path: "/docs",
-  },
-  {
     id: 3,
+    title: "Testimonials",
+    newTab: false,
+    path: "/#testimonials",
+  },
+  {
+    id: 4,
+    title: "FAQ",
+    newTab: false,
+    path: "/#faq",
+  },
+  {
+    id: 5,
     title: "Pages",
     newTab: false,
     submenu: [
       {
-        id: 31,
-        title: "Blog Grid",
-        newTab: false,
-        path: "/blog",
-      },
-      {
-        id: 34,
+        id: 51,
         title: "Sign In",
         newTab: false,
-        path: "/auth/signin",
+        // path: "/auth/signin",
       },
       {
-        id: 35,
+        id: 52,
         title: "Sign Up",
         newTab: false,
-        path: "/auth/signup",
+        // path: "/auth/signup",
       },
       {
-        id: 35,
-        title: "Docs",
-        newTab: false,
-        path: "/docs",
-      },
-      {
-        id: 35.1,
-        title: "Support",
-        newTab: false,
-        path: "/support",
-      },
-      {
-        id: 36,
+        id: 53,
         title: "404",
         newTab: false,
-        path: "/error",
+        path: "/404",
       },
     ],
-  },
-
-  {
-    id: 4,
-    title: "Support",
-    newTab: false,
-    path: "/support",
   },
 ];
 
