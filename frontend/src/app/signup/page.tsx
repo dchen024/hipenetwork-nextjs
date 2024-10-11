@@ -11,6 +11,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card"; // Import Card components
+import router from "next/router";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -66,6 +67,8 @@ export default function SignUp() {
 
     if (error) {
       setError(error.message);
+    } else {
+      router.push("/home");
     }
 
     setLoading(false);
@@ -79,6 +82,8 @@ export default function SignUp() {
 
     if (error) {
       console.error(`Error signing up with ${provider}:`, error.message);
+    } else {
+      router.push("/home");
     }
   };
 

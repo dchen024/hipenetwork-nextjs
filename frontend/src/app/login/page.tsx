@@ -11,6 +11,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { useState } from "react";
+import router from "next/router";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -62,6 +63,8 @@ export default function Login() {
 
     if (error) {
       setError(error.message);
+    } else {
+      router.push("/home");
     }
 
     setLoading(false);
@@ -75,6 +78,8 @@ export default function Login() {
 
     if (error) {
       console.error(`Error logging in with ${provider}:`, error.message);
+    } else {
+      router.push("/home");
     }
   };
 
