@@ -11,9 +11,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { useState } from "react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -74,12 +75,15 @@ export default function Login() {
   const handleOAuthLogin = async (
     provider: "github" | "google" | "linkedin_oidc",
   ) => {
-    const { error } = await supabase.auth.signInWithOAuth({ provider });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
+    });
 
     if (error) {
       console.error(`Error logging in with ${provider}:`, error.message);
     } else {
-      router.push("/home");
+      // router.push("/home");
     }
   };
 

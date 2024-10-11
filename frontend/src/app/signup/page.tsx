@@ -11,9 +11,10 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card"; // Import Card components
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -78,7 +79,10 @@ export default function SignUp() {
   const handleOAuthSignUp = async (
     provider: "github" | "google" | "linkedin_oidc",
   ) => {
-    const { error } = await supabase.auth.signInWithOAuth({ provider });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
+    });
 
     if (error) {
       console.error(`Error signing up with ${provider}:`, error.message);
