@@ -81,11 +81,11 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex items-center justify-center h-screen">
       {/* Card component wrapping the sign-up form */}
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="mb-4 text-center text-2xl font-semibold">
+          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
             Sign Up
           </CardTitle>
         </CardHeader>
@@ -134,7 +134,7 @@ export default function SignUp() {
             variant="default"
             onClick={handleSignUp}
             disabled={loading}
-            className="w-full"
+            className="w-full text-black dark:text-white"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </Button>
@@ -142,20 +142,21 @@ export default function SignUp() {
 
         <CardFooter className="flex flex-col space-y-4">
           {/* OAuth Buttons for GitHub and Google */}
+          <p className="dark:text-white">or</p>
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("github")}
-            className="w-full"
+            className="w-full text-black dark:text-white"
           >
-            Sign up with GitHub
+            Sign in with GitHub
           </Button>
 
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("google")}
-            className="w-full"
+            className="w-full text-black dark:text-white"
           >
-            Sign up with Google
+            Sign in with Google
           </Button>
         </CardFooter>
       </Card>
