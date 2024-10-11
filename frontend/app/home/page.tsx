@@ -27,7 +27,9 @@ export default function HomePage() {
     if (error) {
       console.error("Error logging out:", error.message);
     } else {
-      router.push("/login"); // Redirect to login after logout
+      setTimeout(() => {
+        router.push("/"); // Redirect to login after logout
+      }, 2000);
     }
   };
 

@@ -65,7 +65,9 @@ export default function Login() {
     if (error) {
       setError(error.message);
     } else {
-      router.push("/home");
+      setTimeout(() => {
+        router.push("/home"); // Redirect to home after login
+      }, 2000);
     }
 
     setLoading(false);
