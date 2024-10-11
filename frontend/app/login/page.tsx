@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { supabase } from "../../../lib/supabaseClient";
+import { supabase } from "../../utils/supabase/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,18 +9,21 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card"; // Import Card components
+} from "@/components/ui/card";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SignUp() {
+export default function Login() {
   const router = useRouter();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isEmailValid = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const isPasswordValid = (password: string) => {
     const minLength = 8;
@@ -39,15 +41,9 @@ export default function SignUp() {
     );
   };
 
-  // Function to handle email/password sign-up
-  const handleSignUp = async () => {
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      setError("All fields are required");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+  const handleLogin = async () => {
+    if (!isEmailValid(email)) {
+      setError("Invalid email format");
       return;
     }
 
@@ -61,7 +57,7 @@ export default function SignUp() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -75,8 +71,8 @@ export default function SignUp() {
     setLoading(false);
   };
 
-  // Function to handle OAuth sign-up (GitHub, Google, LinkedIn)
-  const handleOAuthSignUp = async (
+  // Function to handle OAuth login (GitHub, Google, LinkedIn)
+  const handleOAuthLogin = async (
     provider: "github" | "google" | "linkedin_oidc",
   ) => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -85,38 +81,24 @@ export default function SignUp() {
     });
 
     if (error) {
-      console.error(`Error signing up with ${provider}:`, error.message);
+      console.error(`Error logging in with ${provider}:`, error.message);
     } else {
-      router.push("/home");
+      // router.push("/home");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Card component wrapping the sign-up form */}
-      <Card className="w-full max-w-md bg-white dark:bg-blacksection">
+    <div className="flex h-screen items-center justify-center">
+      {/* Card component wrapping the login form */}
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
-            Sign Up
+          <CardTitle className="mb-4 text-center text-2xl font-semibold text-black dark:text-white">
+            Login
           </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Form for Email/Password Sign-Up */}
-          <Input
-            type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className={!firstName ? "border-red-500" : ""}
-          />
-          <Input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className={!lastName ? "border-red-500" : ""}
-          />
+          {/* Form for Email/Password Login */}
           <Input
             type="email"
             placeholder="Email"
@@ -131,50 +113,44 @@ export default function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             className={!password ? "border-red-500" : ""}
           />
-          <Input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={!confirmPassword ? "border-red-500" : ""}
-          />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <Button
             variant="default"
-            onClick={handleSignUp}
+            onClick={handleLogin}
             disabled={loading}
-            className="w-full text-white bg-primary dark:bg-btndark dark:text-white"
+            className="w-full text-black dark:text-white"
           >
-            {loading ? "Signing up..." : "Sign Up"}
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">
           {/* OAuth Buttons for GitHub, Google, and LinkedIn */}
+
           <p className="dark:text-white">or</p>
           <Button
             variant="outline"
-            onClick={() => handleOAuthSignUp("linkedin_oidc")}
-            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+            onClick={() => handleOAuthLogin("linkedin_oidc")}
+            className="w-full text-black dark:text-white"
           >
-            Sign up with LinkedIn
+            Sign in with LinkedIn
           </Button>
           {/* <Button
             variant="outline"
-            onClick={() => handleOAuthSignUp("github")}
-            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+            onClick={() => handleOAuthLogin("github")}
+            className="w-full text-black dark:text-white"
           >
-            Sign up with GitHub
+            Sign in with GitHub
           </Button> */}
 
           <Button
             variant="outline"
-            onClick={() => handleOAuthSignUp("google")}
-            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+            onClick={() => handleOAuthLogin("google")}
+            className="w-full text-black dark:text-white"
           >
-            Sign up with Google
+            Sign in with Google
           </Button>
         </CardFooter>
       </Card>
