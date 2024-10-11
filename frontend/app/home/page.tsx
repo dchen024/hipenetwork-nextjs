@@ -29,7 +29,7 @@ export default function HomePage() {
     } else {
       setTimeout(() => {
         router.push("/"); // Redirect to login after logout
-      }, 2000);
+      }, 500);
     }
   };
 
