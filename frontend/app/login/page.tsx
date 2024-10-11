@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "../../utils/supabase/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -88,11 +88,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex items-center justify-center h-screen">
       {/* Card component wrapping the login form */}
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="mb-4 text-center text-2xl font-semibold text-black dark:text-white">
+          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
             Login
           </CardTitle>
         </CardHeader>

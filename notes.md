@@ -18,6 +18,13 @@
 # Login
 
 - Test with bad passwords
+- Fix Login with email and password
+- add email confirmation
+
+# Profile
+
+- add skills section
+- update work history section
 
 # CB Notes
 

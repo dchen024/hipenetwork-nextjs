@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../utils/supabase/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -67,7 +67,7 @@ export default function SignUp() {
     });
 
     if (error) {
-      setError(error.message);
+      setError(error.message || "An unknown error occurred");
     } else {
       router.push("/home");
     }
@@ -79,24 +79,43 @@ export default function SignUp() {
   const handleOAuthSignUp = async (
     provider: "github" | "google" | "linkedin_oidc",
   ) => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
+      options: {
+        // skipBrowserRedirect: true,
+        redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+      },
     });
 
     if (error) {
-      console.error(`Error signing up with ${provider}:`, error.message);
+      console.error(
+        `Error signing up with ${provider}:`,
+        error.message || "An unknown error occurred",
+      );
     } else {
-      router.push("/home");
+      // const {
+      //   data: { user },
+      //   error,
+      // } = await supabase.auth.getUser();
+      // if (error) {
+      //   console.error("Error getting user:", error.message);
+      // }
+      // if (user) {
+      //   const { id } = user;
+      //   const { data, error } = await supabase
+      //     .from("users")
+      //     .insert([{ id: id, email: email }]);
+      //   router.push("/home");
+      // }
     }
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       {/* Card component wrapping the sign-up form */}
       <Card className="w-full max-w-md bg-white dark:bg-blacksection">
         <CardHeader>
-          <CardTitle className="mb-4 text-center text-2xl font-semibold text-black dark:text-white">
+          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
             Sign Up
           </CardTitle>
         </CardHeader>
@@ -145,7 +164,7 @@ export default function SignUp() {
             variant="default"
             onClick={handleSignUp}
             disabled={loading}
-            className="w-full bg-primary text-white dark:bg-btndark dark:text-white"
+            className="w-full text-white bg-primary dark:bg-btndark dark:text-white"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </Button>
@@ -157,7 +176,7 @@ export default function SignUp() {
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("linkedin_oidc")}
-            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
+            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
           >
             Sign up with LinkedIn
           </Button>
@@ -172,7 +191,7 @@ export default function SignUp() {
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("google")}
-            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
+            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
           >
             Sign up with Google
           </Button>
