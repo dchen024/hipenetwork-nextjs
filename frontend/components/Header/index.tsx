@@ -35,10 +35,10 @@ const Header = () => {
           : ""
       }`}
     >
-      <div className="relative mx-auto max-w-c-1390 items-center justify-between px-4 md:px-8 xl:flex 2xl:px-0">
-        <div className="bold flex w-full items-center justify-between xl:w-1/4">
+      <div className="relative items-center justify-between px-4 mx-auto max-w-c-1390 md:px-8 xl:flex 2xl:px-0">
+        <div className="flex items-center justify-between w-full bold xl:w-1/4">
           <a href="/">
-            <h1 className="bold text-black dark:text-white">HIPE Network</h1>
+            <h1 className="text-black bold dark:text-white">HIPE Network</h1>
             {/* <Image
               src='/images/logo/logo-dark.svg'
               alt='logo'
@@ -62,7 +62,7 @@ const Header = () => {
             onClick={() => setNavigationOpen(!navigationOpen)}
           >
             <span className="relative block h-5.5 w-5.5 cursor-pointer">
-              <span className="absolute right-0 block h-full w-full">
+              <span className="absolute right-0 block w-full h-full">
                 <span
                   className={`relative left-0 top-0 my-1 block h-0.5 rounded-sm bg-black delay-[0] duration-200 ease-in-out dark:bg-white ${
                     !navigationOpen ? "!w-full delay-300" : "w-0"
@@ -79,7 +79,7 @@ const Header = () => {
                   }`}
                 ></span>
               </span>
-              <span className="du-block absolute right-0 h-full w-full rotate-45">
+              <span className="absolute right-0 w-full h-full rotate-45 du-block">
                 <span
                   className={`absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out dark:bg-white ${
                     !navigationOpen ? "!h-0 delay-[0]" : "h-full"
@@ -111,12 +111,12 @@ const Header = () => {
                     <>
                       <button
                         onClick={() => setDropdownToggler(!dropdownToggler)}
-                        className="flex cursor-pointer items-center justify-between gap-3 hover:text-primary"
+                        className="flex items-center justify-between gap-3 cursor-pointer hover:text-primary"
                       >
                         {menuItem.title}
                         <span>
                           <svg
-                            className="h-3 w-3 cursor-pointer fill-waterloo group-hover:fill-primary"
+                            className="w-3 h-3 cursor-pointer fill-waterloo group-hover:fill-primary"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512"
                           >
@@ -152,11 +152,11 @@ const Header = () => {
             </ul>
           </nav>
 
-          <div className="mt-7 flex items-center gap-6 xl:mt-0">
+          <div className="flex items-center gap-6 mt-7 xl:mt-0">
             <ThemeToggler />
 
             <Link
-              href="" // fix me
+              href="/login"
               className="flex items-center justify-center rounded-full bg-primary px-7.5 py-2.5 text-regular text-white duration-300 ease-in-out hover:bg-primaryho"
             >
               Log In
