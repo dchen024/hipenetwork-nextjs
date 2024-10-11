@@ -67,8 +67,10 @@ export default function Login() {
     setLoading(false);
   };
 
-  // Function to handle OAuth login (GitHub, Google)
-  const handleOAuthLogin = async (provider: "github" | "google") => {
+  // Function to handle OAuth login (GitHub, Google, LinkedIn)
+  const handleOAuthLogin = async (
+    provider: "github" | "google" | "linkedin_oidc",
+  ) => {
     const { error } = await supabase.auth.signInWithOAuth({ provider });
 
     if (error) {
@@ -116,15 +118,23 @@ export default function Login() {
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">
-          {/* OAuth Buttons for GitHub and Google */}
+          {/* OAuth Buttons for GitHub, Google, and LinkedIn */}
+
           <p className="dark:text-white">or</p>
           <Button
+            variant="outline"
+            onClick={() => handleOAuthLogin("linkedin_oidc")}
+            className="w-full text-black dark:text-white"
+          >
+            Sign in with LinkedIn
+          </Button>
+          {/* <Button
             variant="outline"
             onClick={() => handleOAuthLogin("github")}
             className="w-full text-black dark:text-white"
           >
             Sign in with GitHub
-          </Button>
+          </Button> */}
 
           <Button
             variant="outline"

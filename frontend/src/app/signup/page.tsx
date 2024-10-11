@@ -71,8 +71,10 @@ export default function SignUp() {
     setLoading(false);
   };
 
-  // Function to handle OAuth sign-up (GitHub, Google)
-  const handleOAuthSignUp = async (provider: "github" | "google") => {
+  // Function to handle OAuth sign-up (GitHub, Google, LinkedIn)
+  const handleOAuthSignUp = async (
+    provider: "github" | "google" | "linkedin_oidc",
+  ) => {
     const { error } = await supabase.auth.signInWithOAuth({ provider });
 
     if (error) {
@@ -81,9 +83,9 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       {/* Card component wrapping the sign-up form */}
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white dark:bg-blacksection">
         <CardHeader>
           <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
             Sign Up
@@ -134,29 +136,36 @@ export default function SignUp() {
             variant="default"
             onClick={handleSignUp}
             disabled={loading}
-            className="w-full text-black dark:text-white"
+            className="w-full text-white bg-primary dark:bg-btndark dark:text-white"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </Button>
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">
-          {/* OAuth Buttons for GitHub and Google */}
+          {/* OAuth Buttons for GitHub, Google, and LinkedIn */}
           <p className="dark:text-white">or</p>
           <Button
             variant="outline"
-            onClick={() => handleOAuthSignUp("github")}
-            className="w-full text-black dark:text-white"
+            onClick={() => handleOAuthSignUp("linkedin_oidc")}
+            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
           >
-            Sign in with GitHub
+            Sign up with LinkedIn
           </Button>
+          {/* <Button
+            variant="outline"
+            onClick={() => handleOAuthSignUp("github")}
+            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+          >
+            Sign up with GitHub
+          </Button> */}
 
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("google")}
-            className="w-full text-black dark:text-white"
+            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
           >
-            Sign in with Google
+            Sign up with Google
           </Button>
         </CardFooter>
       </Card>
