@@ -5,6 +5,7 @@ import { supabase } from "@/utils/supabase/supabaseClient";
 import BasicInformationEdit from "./BasicInformationEdit";
 import { User } from "@/types/user";
 import WorkHistoryEdit from "./WorkHistoryEdit";
+import EducationHistoryEdit from "./EducationHistoryEdit";
 
 export default function EditProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -65,6 +66,7 @@ export default function EditProfilePage() {
       <h1 className="mb-4 text-2xl font-bold">Edit Profile</h1>
       <BasicInformationEdit user={user} />
       <WorkHistoryEdit user={user} />
+      <EducationHistoryEdit user={user} />
     </div>
   );
 }

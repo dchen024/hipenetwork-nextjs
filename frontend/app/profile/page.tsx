@@ -6,6 +6,7 @@ import { User } from "@/types/user";
 import { BasicInformation } from "./BasicInformation";
 import { WorkHistory } from "./WorkHistory";
 import { useRouter } from "next/navigation";
+import { EducationHistory } from "./EducationHistory";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -64,6 +65,7 @@ export default function ProfilePage() {
         <>
           <BasicInformation user={user} />
           <WorkHistory workHistory={user.work_history || []} />
+          <EducationHistory educationHistory={user.education_history || []} />
         </>
       ) : (
         <p>No user data available.</p>

@@ -16,6 +16,13 @@ export type User = {
     start_date: string;
     end_date: string;
   }[];
-  education_history: Record<string, any> | null;
+  education_history?: {
+    school_name: string;
+    degree: string;
+    start_date: string;
+    end_date: string;
+    description?: string;
+    school_img: string;
+  }[];
   skills: Record<string, any> | null;
 };
