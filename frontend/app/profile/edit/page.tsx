@@ -7,11 +7,14 @@ import { User } from "@/types/user";
 import WorkHistoryEdit from "./WorkHistoryEdit";
 import EducationHistoryEdit from "./EducationHistoryEdit";
 import SkillSectionEdit from "./SkillSectionEdit";
+import { useRouter } from "next/navigation";
 
 export default function EditProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -69,6 +72,12 @@ export default function EditProfilePage() {
       <WorkHistoryEdit user={user} />
       <EducationHistoryEdit user={user} />
       <SkillSectionEdit user={user} />
+      <button
+        onClick={() => router.push("/home")}
+        className="mt-8 rounded bg-red-500 px-4 py-2 text-white"
+      >
+        Cancel
+      </button>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { WorkHistory } from "./WorkHistory";
 import { useRouter } from "next/navigation";
 import { EducationHistory } from "./EducationHistory";
 import { SkillSection } from "./SkillSection";
+import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -72,19 +73,20 @@ export default function ProfilePage() {
       ) : (
         <p>No user data available.</p>
       )}
-      <div className="mt-4 flex flex-col items-center gap-2">
-        <button
+      <div className="mt-8 flex flex-col space-y-4">
+        <Button
           onClick={() => router.push("/profile/edit")}
-          className="w-40 rounded bg-blue-500 px-4 py-2 text-black"
+          className="w-full bg-blue-500 text-white sm:w-auto"
         >
           Edit Profile
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => router.push("/home")}
-          className="w-40 rounded border-2 border-black px-4 py-2 text-black"
+          variant="outline"
+          className="w-full sm:w-auto"
         >
           Home
-        </button>
+        </Button>
       </div>
     </div>
   );

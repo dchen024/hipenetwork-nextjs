@@ -141,7 +141,7 @@ export default function BasicInformationEdit({
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
-          className="mt-1 block w-full"
+          className="mt-1 block w-full rounded-md border p-2"
           rows={4}
         />
       </div>
@@ -152,12 +152,6 @@ export default function BasicInformationEdit({
         >
           {loading ? "Saving..." : "Update Basic Information"}
         </Button>
-        <button
-          onClick={() => router.push("/home")}
-          className="rounded bg-red-500 px-4 py-2 text-white "
-        >
-          Cancel
-        </button>
       </div>
       {error && <p className="text-red-500">{error}</p>}
     </form>
