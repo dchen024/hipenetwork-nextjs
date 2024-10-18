@@ -4,6 +4,7 @@ import { supabase } from "@/utils/supabase/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -16,6 +17,7 @@ export default function HomePage() {
         router.push("/login"); // Redirect to login if not authenticated
       } else {
         setUser(data.user);
+        // console.log(data.user);
       }
     };
 
@@ -38,22 +40,22 @@ export default function HomePage() {
   }
 
   return (
-    <div>
-      <h1>Home Page</h1>
-      <p>Welcome, {user.email}!</p>
-      <button
-        onClick={handleLogout}
-        className="px-4 py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-700"
-      >
-        Logout
-      </button>
-      <div className="flex">
-        <button
+    <div className="container mx-auto flex h-screen w-full flex-col items-center justify-center p-4">
+      <h1 className="text-4xl font-bold">Feed</h1>
+      <p>Welcome, {user.user_metadata.name}!</p>
+      <div className="mt-8 flex flex-col items-start gap-2">
+        <Button
           onClick={() => router.push("/profile")}
-          className="px-4 py-2 text-white bg-blue-500 rounded"
+          className="bg-blue-500 text-white "
         >
           View Profile
-        </button>
+        </Button>
+        <Button
+          onClick={handleLogout}
+          className="bg-red-500 text-white hover:bg-red-600"
+        >
+          Logout
+        </Button>
       </div>
     </div>
   );
