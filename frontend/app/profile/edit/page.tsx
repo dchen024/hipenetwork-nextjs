@@ -19,11 +19,10 @@ export default function EditProfile() {
     username: "",
     profile_picture: "",
     description: "",
-    work_history: {},
-    education_history: {},
-    skills: {},
+    work_history: [],
+    education_history: [],
+    skills: [],
   });
-  const [userCreated, setUserCreated] = useState(false); // Flag to prevent duplicate creation
   const [profileImage, setProfileImage] = useState<File | null>(null); // State for profile image
   const router = useRouter();
 
@@ -43,10 +42,13 @@ export default function EditProfile() {
         .eq("id", id)
         .single();
 
-      if (error && !userCreated) {
-        // If user does not exist in the users table, create a new user
-        await createUser(id, email || "");
-        router.refresh();
+      // if (error && !userCreated) {
+      //   // If user does not exist in the users table, create a new user
+      //   await createUser(id, email || "");
+      //   router.refresh();
+
+      if (error) {
+        console.log("Error fetching user data: ", error);
       } else if (data) {
         setUser(data);
         setFormData({
@@ -69,22 +71,22 @@ export default function EditProfile() {
     fetchUser();
   }, []);
 
-  const createUser = async (id: string, email: string) => {
-    const { error } = await supabase.from("users").insert([
-      {
-        id,
-        email,
-      },
-    ]);
+  // const createUser = async (id: string, email: string) => {
+  //   const { error } = await supabase.from("users").insert([
+  //     {
+  //       id,
+  //       email,
+  //     },
+  //   ]);
 
-    if (error) {
-      setError(error.message);
-    } else {
-      setUserCreated(true); // Set the flag to true after user is created
-      // Fetch the user again to update the state
-      fetchUser();
-    }
-  };
+  //   if (error) {
+  //     setError(error.message);
+  //   } else {
+  //     setUserCreated(true); // Set the flag to true after user is created
+  //     // Fetch the user again to update the state
+  //     fetchUser();
+  //   }
+  // };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -154,7 +156,7 @@ export default function EditProfile() {
   }
 
   return (
-    <div className="container p-4 mx-auto">
+    <div className="container mx-auto p-4">
       <h1 className="mb-4 text-2xl font-bold">Edit Profile</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -166,7 +168,7 @@ export default function EditProfile() {
             name="first_name"
             value={formData.first_name || ""}
             onChange={handleChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
           />
         </div>
         <div>
@@ -178,7 +180,7 @@ export default function EditProfile() {
             name="last_name"
             value={formData.last_name || ""}
             onChange={handleChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
           />
         </div>
         <div>
@@ -190,7 +192,7 @@ export default function EditProfile() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
           />
         </div>
         <div>
@@ -202,7 +204,7 @@ export default function EditProfile() {
             name="username"
             value={formData.username || ""}
             onChange={handleChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
           />
         </div>
 
@@ -214,7 +216,7 @@ export default function EditProfile() {
             type="file"
             name="profile_image"
             onChange={handleFileChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
           />
         </div>
         <div>
@@ -225,19 +227,19 @@ export default function EditProfile() {
             name="description"
             value={formData.description || ""}
             onChange={handleChange}
-            className="block w-full mt-1"
+            className="mt-1 block w-full"
             rows={4}
           />
         </div>
         <Button
           type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded"
+          className="w-full rounded bg-blue-500 px-4 py-2 text-white"
         >
           {loading ? "Saving..." : "Save Changes"}
         </Button>
         <button
           onClick={() => router.push("/home")}
-          className="w-full px-4 py-2 text-white bg-red-500 rounded"
+          className="w-full rounded bg-red-500 px-4 py-2 text-white"
         >
           Cancel
         </button>
