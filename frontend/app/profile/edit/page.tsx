@@ -6,6 +6,7 @@ import BasicInformationEdit from "./BasicInformationEdit";
 import { User } from "@/types/user";
 import WorkHistoryEdit from "./WorkHistoryEdit";
 import EducationHistoryEdit from "./EducationHistoryEdit";
+import SkillSectionEdit from "./SkillSectionEdit";
 
 export default function EditProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -67,6 +68,7 @@ export default function EditProfilePage() {
       <BasicInformationEdit user={user} />
       <WorkHistoryEdit user={user} />
       <EducationHistoryEdit user={user} />
+      <SkillSectionEdit user={user} />
     </div>
   );
 }

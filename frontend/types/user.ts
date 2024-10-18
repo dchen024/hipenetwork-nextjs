@@ -24,5 +24,5 @@ export type User = {
     description?: string;
     school_img: string;
   }[];
-  skills: Record<string, any> | null;
+  skills?: string[];
 };
