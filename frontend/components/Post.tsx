@@ -2,8 +2,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import EditPostForm from "@/components/EditPostForm";
+import Link from "next/link";
 
 interface PostProps {
   id: string;
@@ -28,33 +27,8 @@ export default function Post({
   authorId,
   currentUserId,
 }: PostProps) {
-  const [isEditing, setIsEditing] = useState(false);
   const formattedDate = new Date(createdAt).toLocaleString();
   const isAuthor = authorId === currentUserId;
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleEditComplete = () => {
-    setIsEditing(false);
-    // You might want to refresh the post data here
-  };
-
-  if (isEditing) {
-    return (
-      <EditPostForm
-        id={id}
-        initialTitle={title}
-        initialDescription={description}
-        initialPostImage={postImage}
-        authorName={authorName}
-        authorAvatar={authorAvatar}
-        createdAt={createdAt}
-        onEditComplete={handleEditComplete}
-      />
-    );
-  }
 
   return (
     <Card className="mx-auto mb-6 w-full max-w-2xl">
@@ -69,11 +43,16 @@ export default function Post({
           <CardTitle>{authorName || "Unknown User"}</CardTitle>
           <p className="text-sm text-gray-500">{formattedDate}</p>
         </div>
-        {isAuthor && (
-          <Button variant="outline" onClick={handleEditClick}>
-            Edit
-          </Button>
-        )}
+        <div className="space-x-2">
+          <Link href={`/post/${id}`} passHref>
+            <Button variant="outline">View</Button>
+          </Link>
+          {isAuthor && (
+            <Link href={`/post/edit/${id}`} passHref>
+              <Button variant="outline">Edit</Button>
+            </Link>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <h3 className="mb-2 text-xl font-semibold">{title}</h3>

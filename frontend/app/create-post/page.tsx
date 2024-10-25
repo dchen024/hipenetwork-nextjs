@@ -30,7 +30,7 @@ export default function CreatePost() {
 
   return (
     <div>
-      <NavBar user={user} />
+      <NavBar />
       <CreatePostForm />
     </div>
   );

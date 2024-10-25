@@ -10,6 +10,7 @@ import Image from "next/image";
 import { createClient } from "@/utils/supabase/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 interface EditPostFormProps {
   id: string;
@@ -40,6 +41,7 @@ export default function EditPostForm({
   const [user, setUser] = useState<User | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formattedDate = new Date(createdAt).toLocaleString();
+  const router = useRouter();
 
   const supabase = createClient();
 
@@ -111,7 +113,9 @@ export default function EditPostForm({
 
       if (updateError) throw updateError;
 
-      onEditComplete();
+      if (!updateError) {
+        router.push(`/post/${id}`);
+      }
     } catch (error) {
       console.error("Error updating post:", error);
       alert("Error updating post. Please try again.");
