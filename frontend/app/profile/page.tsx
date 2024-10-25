@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { EducationHistory } from "./EducationHistory";
 import { SkillSection } from "./SkillSection";
 import { Button } from "@/components/ui/button";
+import NavBar from "@/components/NavBar";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -61,33 +62,36 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-4 text-2xl font-bold">Profile</h1>
-      {user ? (
-        <>
-          <BasicInformation user={user} />
-          <WorkHistory workHistory={user.work_history || []} />
-          <EducationHistory educationHistory={user.education_history || []} />
-          <SkillSection skills={user.skills || []} />
-        </>
-      ) : (
-        <p>No user data available.</p>
-      )}
-      <div className="mt-8 flex flex-col space-y-4">
-        <Button
-          onClick={() => router.push("/profile/edit")}
-          className="w-full bg-blue-500 text-white sm:w-auto"
-        >
-          Edit Profile
-        </Button>
-        <Button
-          onClick={() => router.push("/home")}
-          variant="outline"
-          className="w-full sm:w-auto"
-        >
-          Home
-        </Button>
+    <>
+      <NavBar />
+      <div className="container mx-auto p-4">
+        <h1 className="mb-4 text-2xl font-bold">Profile</h1>
+        {user ? (
+          <>
+            <BasicInformation user={user} />
+            <WorkHistory workHistory={user.work_history || []} />
+            <EducationHistory educationHistory={user.education_history || []} />
+            <SkillSection skills={user.skills || []} />
+          </>
+        ) : (
+          <p>No user data available.</p>
+        )}
+        <div className="mt-8 flex flex-col space-y-4">
+          <Button
+            onClick={() => router.push("/profile/edit")}
+            className="w-full bg-blue-500 text-white sm:w-auto"
+          >
+            Edit Profile
+          </Button>
+          <Button
+            onClick={() => router.push("/home")}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
+            Home
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
