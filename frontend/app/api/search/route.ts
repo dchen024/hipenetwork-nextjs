@@ -12,12 +12,12 @@ export async function GET(req: Request) {
     );
   }
 
-  // Perform a full-text search on the 'posts' table using the 'title' column
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .textSearch("title", search, {
+    .textSearch("title", `${search}:*`, {
       type: "websearch",
+      config: "english",
     });
 
   if (error) {
