@@ -89,6 +89,7 @@ export default function CreatePost() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            className="min-h-[300px]"
           />
           <Input
             type="file"

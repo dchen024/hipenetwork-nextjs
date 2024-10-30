@@ -206,10 +206,10 @@ export default function EditPostForm({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
-            className="min-h-[100px]"
+            className="min-h-[300px]"
           />
           {postImage && (
-            <div className="relative h-64 w-full">
+            <div className="relative h-96 w-full">
               <Image
                 src={
                   newImage

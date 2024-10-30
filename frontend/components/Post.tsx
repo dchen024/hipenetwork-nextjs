@@ -82,9 +82,9 @@ export default function Post({
       </CardHeader>
       <CardContent>
         <h3 className="mb-2 text-xl font-semibold">{title}</h3>
-        <p className="mb-4">{description}</p>
+        <p className="mb-4 whitespace-pre-wrap">{description}</p>
         {postImage && (
-          <div className="relative h-64 w-full">
+          <div className="relative h-96 w-full">
             <Image
               src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/posts/${postImage}`}
               alt={title}
