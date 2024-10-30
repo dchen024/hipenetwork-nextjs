@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 import NavBar from "@/components/NavBar";
 import Feed from "@/components/Feed";
+import SearchBar from "@/components/SearchBar";
 
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -24,6 +25,10 @@ export default function HomePage() {
     fetchUser();
   }, [router]);
 
+  const handleResultClick = (postId: string) => {
+    router.push(`/post/${postId}`);
+  };
+
   if (!user) {
     return <p>Loading...</p>;
   }
@@ -33,6 +38,9 @@ export default function HomePage() {
       <NavBar />
       <main className="container mx-auto px-4 py-8">
         <h1 className="mb-8 text-center text-4xl font-bold">Feed</h1>
+        <div className="relative mb-8 flex justify-center">
+          <SearchBar onResultClick={handleResultClick} />
+        </div>
         <Feed />
       </main>
     </div>
