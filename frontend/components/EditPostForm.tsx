@@ -11,6 +11,18 @@ import { createClient } from "@/utils/supabase/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface EditPostFormProps {
   id: string;
@@ -124,6 +136,23 @@ export default function EditPostForm({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const { error } = await supabase.from("posts").delete().eq("id", id);
+
+      if (error) throw error;
+
+      console.log("Post successfully deleted:", id);
+
+      // After successful deletion, redirect to home page
+      router.push("/home");
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Failed to delete post");
+    }
+  };
+
   return (
     <Card className="mx-auto mb-6 w-full max-w-2xl">
       <CardHeader className="flex flex-row items-center space-x-4">
@@ -137,6 +166,33 @@ export default function EditPostForm({
           <CardTitle>{authorName || "Unknown User"}</CardTitle>
           <p className="text-sm text-gray-500">{formattedDate}</p>
         </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
+              <Trash2 className="h-5 w-5 text-red-500" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Post</AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-500">
+                Are you sure you want to delete this post? This action cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-100 hover:bg-gray-200">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-500 text-white hover:bg-red-600"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
