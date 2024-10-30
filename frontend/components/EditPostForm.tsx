@@ -247,7 +247,11 @@ export default function EditPostForm({
             >
               {loading ? "Saving..." : "Save Changes"}
             </Button>
-            <Button type="button" variant="outline" onClick={onEditComplete}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push(`/post/${id}`)}
+            >
               Cancel
             </Button>
           </div>
