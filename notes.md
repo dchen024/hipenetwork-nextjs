@@ -62,3 +62,7 @@ Oct 9 2024
 - add linkedin auth
 - create profile form
 - create post component
+
+Nov 5 2024
+
+- add ratelimiting to chat
