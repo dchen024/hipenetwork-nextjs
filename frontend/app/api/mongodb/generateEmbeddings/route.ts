@@ -1,71 +1,96 @@
+import { NextResponse } from "next/server";
 import createEmbeddings from "@/utils/openai/generateEmbeddings";
 import { connectToMongoDB } from "@/utils/mongodb/mongodb";
 import fs from "fs";
 import path from "path";
 
-/**
- * @typedef {Object} Data
- * @property {string} question - The question being asked.
- * @property {string} answer - The answer to the question.
- * @property {string[]} tags - Tags related to the question and answer.
- * @property {string} context - Additional context for the question and answer.
- * @property {string} school - The school associated with the question and answer.
- */
+interface SchoolData {
+  question: string;
+  answer: string;
+  tags: string[];
+  context: string;
+  school: string;
+}
 
-/** @type {Data[]} */
-
-/**
- * @typedef {Object} EmbeddingObject
- * @property {string} object - The type of the object, which is 'embedding'.
- * @property {number} index - The index of the embedding in the list.
- * @property {Array.<number>} embedding - An array representing the embedding vector.
- * @typedef {Object} Usage
- * @property {number} prompt_tokens - The number of tokens in the input prompt.
- * @property {number} total_tokens - The total number of tokens processed, including prompt tokens.
- */
-
-// Read the JSON file using Node.js file system module
-const filePath = path.resolve("./frontend/data/ccny.json");
-const dataArray = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
-async function generateEmbeddingsToMongo() {
-  const client = await connectToMongoDB();
+export async function POST() {
   try {
-    const documentsToInsert = [];
+    const filePath = path.resolve("./data/ccny.json");
+    const dataArray: SchoolData[] = JSON.parse(
+      fs.readFileSync(filePath, "utf-8"),
+    );
 
-    // loop through the data array
-    for (const item of dataArray) {
-      // Create a string by combining the property names and their values
-      const inputString = `question: ${item.question}\n answer: ${
-        item.answer
-      }\n tags: ${item.tags.join(", ")}`;
-
-      // Generate the embedding for the input string
-      const data = await createEmbeddings(inputString);
-
-      const embedding = data.data[0].embedding;
-
-      // Add the embedding to the original object
-      const documentWithEmbedding = {
-        ...item,
-        plot_embedding: embedding,
-      };
-
-      documentsToInsert.push(documentWithEmbedding);
-    }
-
+    const client = await connectToMongoDB();
     const database = client.db("db");
     const collection = database.collection("ccny_embeddings");
 
-    // Insert the combined documents into the collection
-    const result = await collection.insertMany(documentsToInsert);
-    console.log(`${result.insertedCount} documents were inserted`);
-  } catch (error) {
-    console.error("Error inserting documents:", error);
-  } finally {
+    let updatedCount = 0;
+    let insertedCount = 0;
+
+    for (const item of dataArray) {
+      // First check if document exists
+      const existingDoc = await collection.findOne({
+        question: item.question,
+        school: item.school,
+      });
+
+      // Create embedding for the document
+      const inputString = `question: ${item.question}\n answer: ${item.answer}\n context: ${item.context}\n tags: ${item.tags.join(", ")}`;
+      const data = await createEmbeddings(inputString);
+      const embedding = data.data[0].embedding;
+
+      const documentWithEmbedding = {
+        ...item,
+        plot_embedding: embedding,
+        lastUpdated: new Date(), // Add timestamp for tracking updates
+      };
+
+      // Upsert operation with compound key (question + school)
+      const result = await collection.updateOne(
+        {
+          question: item.question,
+          school: item.school,
+        },
+        {
+          $set: documentWithEmbedding,
+          $setOnInsert: {
+            createdAt: new Date(), // Only set on new documents
+          },
+        },
+        { upsert: true },
+      );
+
+      if (result.upsertedCount > 0) {
+        insertedCount++;
+        console.log(`Inserted new document: ${item.question}`);
+      }
+      if (result.modifiedCount > 0) {
+        updatedCount++;
+        console.log(`Updated existing document: ${item.question}`);
+      }
+    }
+
     await client.close();
-    console.log("Connection to MongoDB closed");
+
+    return NextResponse.json({
+      success: true,
+      message: `Operation completed: ${insertedCount} documents inserted, ${updatedCount} documents updated`,
+      details: {
+        insertedCount,
+        updatedCount,
+        totalProcessed: dataArray.length,
+      },
+    });
+  } catch (error) {
+    console.error("Error processing documents:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to process documents",
+        details: error.message,
+      },
+      { status: 500 },
+    );
   }
 }
 
-generateEmbeddingsToMongo().catch(console.error);
+// curl -X POST http://localhost:3000/api/mongodb/generateEmbeddings

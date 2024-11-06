@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 if (!process.env.OPENAI_API_KEY) {
-  throw new Error("OPENAI_KEY environment variable is not defined");
+  throw new Error("OPENAI_API_KEY environment variable is not defined");
 }
 
 const openai = new OpenAI({
