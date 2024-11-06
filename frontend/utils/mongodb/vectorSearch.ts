@@ -8,7 +8,7 @@ if (!process.env.MONGO_URI) {
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
-async function vectorSearchOpenAI(question: string) {
+async function vectorSearchMongoDB(question: string) {
   try {
     await client.connect();
     console.log("Connected to MongoDB");
@@ -59,4 +59,4 @@ async function vectorSearchOpenAI(question: string) {
   }
 }
 
-export default vectorSearchOpenAI;
+export default vectorSearchMongoDB;

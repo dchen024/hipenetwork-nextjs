@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import vectorSearchOpenAI from "@/utils/mongodb/vectorSearch";
+import vectorSearchMongoDB from "@/utils/mongodb/vectorSearch";
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const results = await vectorSearchOpenAI(query);
+    const results = await vectorSearchMongoDB(query);
 
     return NextResponse.json({
       success: true,

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import vectorSearchOpenAI from "@/utils/mongodb/vectorSearch";
+import vectorSearchMongoDB from "@/utils/mongodb/vectorSearch";
 
 export async function GET() {
   try {
     const searchQuery = "Where the library at CCNY?";
     console.log("Starting vector search for:", searchQuery);
 
-    const results = await vectorSearchOpenAI(searchQuery);
+    const results = await vectorSearchMongoDB(searchQuery);
 
     return NextResponse.json({
       success: true,
