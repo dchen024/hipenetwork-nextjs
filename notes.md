@@ -66,3 +66,4 @@ Oct 9 2024
 Nov 5 2024
 
 - add ratelimiting to chat
+- add users to search
