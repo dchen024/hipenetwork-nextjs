@@ -43,7 +43,7 @@ export default function NavBar() {
 
   return (
     <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+      <div className="container flex items-center justify-between px-4 py-3 mx-auto">
         <Link href="/" className="text-xl font-bold">
           HIPE Network
         </Link>
@@ -64,13 +64,21 @@ export default function NavBar() {
               <Button
                 onClick={() => router.push("/create-post")}
                 variant="default"
-                className="bg-green-500 text-white hover:bg-green-600"
+                className="text-white bg-green-500 hover:bg-green-600"
               >
                 Create Post
+              </Button>
+              <Button
+                onClick={() => router.push("/chat")}
+                variant="default"
+                className="text-white bg-purple-500 hover:bg-purple-600"
+              >
+                Chat
               </Button>
               <Button onClick={() => router.push("/profile")} variant="outline">
                 View Profile
               </Button>
+
               <Button onClick={handleLogout} variant="outline">
                 Log Out
               </Button>
@@ -79,7 +87,7 @@ export default function NavBar() {
             <Button
               onClick={() => router.push("/login")}
               variant="default"
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              className="text-white bg-blue-500 hover:bg-blue-600"
             >
               Login
             </Button>
