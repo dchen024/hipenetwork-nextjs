@@ -43,7 +43,7 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/signup") &&
     !request.nextUrl.pathname.startsWith("/") &&
     !request.nextUrl.pathname.startsWith("/auth") &&
-    (request.nextUrl.pathname.startsWith("/chat") ||
+    (request.nextUrl.pathname.startsWith("/chatbot") ||
       request.nextUrl.pathname.startsWith("/home"))
   ) {
     // no user, potentially respond by redirecting the user to the login page
