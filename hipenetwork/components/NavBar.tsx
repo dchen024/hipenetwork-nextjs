@@ -69,7 +69,7 @@ export default function NavBar() {
                 Create Post
               </Button>
               <Button
-                onClick={() => router.push("/chat")}
+                onClick={() => router.push("/chatbot")}
                 variant="default"
                 className="text-white bg-purple-500 hover:bg-purple-600"
               >
