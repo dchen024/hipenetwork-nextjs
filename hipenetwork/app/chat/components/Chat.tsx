@@ -30,6 +30,11 @@ interface UserProfile {
   profile_picture: string;
 }
 
+interface Room {
+  id: string;
+  name: string;
+}
+
 const MESSAGES_PER_PAGE = 20;
 
 export default function Chat({ roomId }: ChatProps) {
@@ -45,6 +50,7 @@ export default function Chat({ roomId }: ChatProps) {
   >({});
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isLoadingHistory = useRef(false);
+  const [roomDetails, setRoomDetails] = useState<Room | null>(null);
 
   const scrollToBottom = () => {
     if (!isLoadingHistory.current) {
@@ -165,6 +171,25 @@ export default function Chat({ roomId }: ChatProps) {
     fetchParticipantProfiles();
   }, [roomId]);
 
+  useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("rooms")
+          .select("id, name")
+          .eq("id", roomId)
+          .single();
+
+        if (error) throw error;
+        setRoomDetails(data);
+      } catch (error) {
+        console.error("Error fetching room details:", error);
+      }
+    };
+
+    fetchRoomDetails();
+  }, [roomId]);
+
   const loadMoreMessages = async () => {
     if (!hasMore || isLoading || messages.length === 0) return;
 
@@ -243,14 +268,16 @@ export default function Chat({ roomId }: ChatProps) {
   return (
     <div className="mx-auto flex h-[80vh] max-w-2xl flex-col rounded-lg bg-white shadow-lg">
       {/* Chat Header */}
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-semibold">Chat Room</h2>
+      <div className="border-b p-4">
+        <h2 className="text-xl font-semibold">
+          {roomDetails?.name || "Loading..."}
+        </h2>
       </div>
 
       {/* Messages Container */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 p-4 space-y-4 overflow-y-auto"
+        className="flex-1 space-y-4 overflow-y-auto p-4"
       >
         {hasMore && (
           <button
@@ -275,18 +302,18 @@ export default function Chat({ roomId }: ChatProps) {
       </div>
 
       {/* Message Input */}
-      <form onSubmit={sendMessage} className="p-4 border-t">
+      <form onSubmit={sendMessage} className="border-t p-4">
         <div className="flex space-x-2">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 px-4 py-2 border rounded-full focus:border-blue-500 focus:outline-none"
+            className="flex-1 rounded-full border px-4 py-2 focus:border-blue-500 focus:outline-none"
           />
           <button
             type="submit"
-            className="px-6 py-2 text-white transition-colors bg-blue-500 rounded-full hover:bg-blue-600"
+            className="rounded-full bg-blue-500 px-6 py-2 text-white transition-colors hover:bg-blue-600"
           >
             Send
           </button>

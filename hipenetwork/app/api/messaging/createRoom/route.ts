@@ -3,12 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    // Initialize Supabase client
     const supabase = createClient();
+    const { participants } = await request.json();
 
-    // Parse request body
-    const body = await request.json();
-    const { name, participants } = body;
+    // console.log("Received participants:", participants);
 
     if (!participants || !Array.isArray(participants)) {
       return NextResponse.json(
@@ -17,10 +15,48 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create room
+    // Fetch user names
+    const { data: users, error: usersError } = await supabase
+      .from("users")
+      .select("id, first_name, last_name")
+      .in("id", participants);
+
+    // console.log("Fetched users:", users);
+
+    if (usersError) {
+      console.error("Users fetch error:", usersError);
+      return NextResponse.json(
+        { error: "Failed to fetch user names" },
+        { status: 500 },
+      );
+    }
+
+    // Verify we fetched all users
+    if (!users || users.length !== participants.length) {
+      console.error("Not all users were fetched", {
+        fetchedCount: users?.length,
+        expectedCount: participants.length,
+        fetchedIds: users?.map((u) => u.id),
+        expectedIds: participants,
+      });
+      return NextResponse.json(
+        { error: "Some users could not be found" },
+        { status: 400 },
+      );
+    }
+
+    // Create room name from participant names
+    const roomName = users
+      .map((user) => `${user.first_name} ${user.last_name}`.trim())
+      .sort()
+      .join(", ");
+
+    // console.log("Generated room name:", roomName);
+
+    // Create room with generated name
     const { data: room, error: roomError } = await supabase
       .from("rooms")
-      .insert({ name })
+      .insert({ name: roomName })
       .select()
       .single();
 
@@ -37,6 +73,8 @@ export async function POST(request: Request) {
       room_id: room.id,
       user_id: userId,
     }));
+
+    // console.log("Adding participants:", participantEntries);
 
     const { error: participantsError } = await supabase
       .from("room_participants")
