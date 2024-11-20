@@ -154,58 +154,57 @@ export default function ChatHistory() {
   };
 
   const formatTimestamp = (timestamp: string) => {
-    // Convert UTC timestamp to user's local timezone
-    const date = new Date(timestamp);
+    // Ensure we're parsing the UTC timestamp correctly by appending 'Z' if it's not already there
+    const utcTimestamp = timestamp.endsWith("Z") ? timestamp : timestamp + "Z";
+    const date = new Date(utcTimestamp);
     const now = new Date();
-    const isToday = date.toLocaleDateString() === now.toLocaleDateString();
-    const isYesterday =
-      new Date(now.setDate(now.getDate() - 1)).toLocaleDateString() ===
-      date.toLocaleDateString();
 
-    // Format time in user's timezone with AM/PM
-    const timeOptions: Intl.DateTimeFormatOptions = {
+    const isToday = date.toLocaleDateString() === now.toLocaleDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isYesterday =
+      date.toLocaleDateString() === yesterday.toLocaleDateString();
+
+    // Format time in local timezone
+    const timeString = date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    };
-
-    const time = date.toLocaleTimeString([], timeOptions);
+    });
 
     if (isToday) {
-      return time;
+      return timeString;
     }
 
     if (isYesterday) {
-      return `Yesterday ${time}`;
+      return `Yesterday ${timeString}`;
     }
-
-    // Date formatting options
-    const dateOptions: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    };
 
     if (date.getFullYear() === now.getFullYear()) {
-      // If same year, show "Mon, 3:30 PM"
-      return date.toLocaleString([], dateOptions);
+      // If same year, show "Mon 3:30 PM"
+      return (
+        date.toLocaleDateString([], {
+          weekday: "short",
+        }) +
+        " " +
+        timeString
+      );
     }
 
-    // If different year, show "Mar 15, 3:30 PM"
-    return date.toLocaleString([], {
-      ...dateOptions,
-      weekday: undefined,
-      month: "short",
-      day: "numeric",
-    });
+    // If different year, show "Mar 15 3:30 PM"
+    return (
+      date.toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+      }) +
+      " " +
+      timeString
+    );
   };
 
   return (
     <div className="h-full">
-      <div className="border-b p-4">
+      <div className="p-4 border-b">
         <h2 className="text-xl font-semibold">Chats</h2>
       </div>
       <div className="h-[calc(100%-4rem)] overflow-y-auto">
@@ -226,7 +225,7 @@ export default function ChatHistory() {
                   </div>
                 </div>
                 {lastMessage && (
-                  <div className="mt-1 truncate text-sm text-gray-500">
+                  <div className="mt-1 text-sm text-gray-500 truncate">
                     <span className="font-medium">
                       {lastMessage.sender.first_name}:
                     </span>{" "}
