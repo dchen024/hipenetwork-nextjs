@@ -29,7 +29,7 @@ interface ChatRoom {
 }
 
 export default function ChatHistory() {
-  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+  const [rooms, setRooms] = useState<any[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const pathname = usePathname();
 
