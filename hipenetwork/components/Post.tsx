@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/supabaseClient";
 import LikeButton from "@/components/LikeButton";
 import CommentSection from "@/components/CommentSection";
+import { useRouter } from "next/navigation";
 
 interface PostProps {
   id: string;
@@ -36,6 +37,7 @@ export default function Post({
   const [likesCount, setLikesCount] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     fetchLikesAndComments();
@@ -57,9 +59,12 @@ export default function Post({
   };
 
   return (
-    <Card className="mx-auto mb-6 w-full max-w-2xl">
+    <Card className="mx-auto mb-6 w-full max-w-2xl bg-white p-4">
       <CardHeader className="flex flex-row items-center space-x-4">
-        <Avatar>
+        <Avatar
+          className="cursor-pointer"
+          onClick={() => router.push(`/profile/${authorId}`)}
+        >
           <AvatarImage src={authorAvatar || undefined} alt={authorName} />
           <AvatarFallback>
             {authorName ? authorName.charAt(0).toUpperCase() : "U"}

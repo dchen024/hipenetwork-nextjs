@@ -8,7 +8,7 @@
 
 - when a user first logs in they should be forced to make a profile
 - auto populate fields using google oauth data
-- let users view profiles by clicking on image?
+- [x] let users view profiles by clicking on image
 
 ## Posts
 

@@ -71,7 +71,7 @@ export default function CreatePost() {
   };
 
   return (
-    <Card className="mx-auto mt-8 w-full max-w-2xl px-4 sm:px-6 lg:px-8">
+    <Card className="mx-auto mt-8 w-full max-w-2xl bg-white px-4 sm:px-6 lg:px-8">
       <CardHeader>
         <CardTitle>New Post</CardTitle>
       </CardHeader>

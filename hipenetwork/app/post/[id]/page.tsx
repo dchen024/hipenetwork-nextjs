@@ -56,19 +56,21 @@ export default function PostPage() {
   if (!post) return <div>Loading...</div>;
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100 pb-16">
       <NavBar />
-      <Post
-        id={post.id}
-        title={post.title}
-        description={post.description}
-        postImage={post.post_img}
-        authorName={`${post.users.first_name} ${post.users.last_name}`}
-        authorAvatar={post.users.profile_picture}
-        createdAt={post.created_at}
-        authorId={post.creator_id}
-        currentUserId={user?.id || ""}
-      />
-    </>
+      <div className="m-8">
+        <Post
+          id={post.id}
+          title={post.title}
+          description={post.description}
+          postImage={post.post_img}
+          authorName={`${post.users.first_name} ${post.users.last_name}`}
+          authorAvatar={post.users.profile_picture}
+          createdAt={post.created_at}
+          authorId={post.creator_id}
+          currentUserId={user?.id || ""}
+        />
+      </div>
+    </div>
   );
 }

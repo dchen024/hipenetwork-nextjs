@@ -154,7 +154,7 @@ export default function EditPostForm({
   };
 
   return (
-    <Card className="mx-auto mb-6 w-full max-w-2xl">
+    <Card className="mx-auto mb-6 w-full max-w-2xl bg-white">
       <CardHeader className="flex flex-row items-center space-x-4">
         <Avatar>
           <AvatarImage src={authorAvatar || undefined} alt={authorName} />

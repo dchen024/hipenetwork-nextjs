@@ -57,18 +57,20 @@ export default function EditPostPage() {
   if (!post) return <div>Loading...</div>;
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100 pb-16">
       <NavBar />
-      <EditPostForm
-        id={post.id}
-        initialTitle={post.title}
-        initialDescription={post.description}
-        initialPostImage={post.post_img}
-        authorName={`${post.users.first_name} ${post.users.last_name}`}
-        authorAvatar={post.users.profile_picture}
-        createdAt={post.created_at}
-        onEditComplete={handleEditComplete}
-      />
-    </>
+      <div className="m-8">
+        <EditPostForm
+          id={post.id}
+          initialTitle={post.title}
+          initialDescription={post.description}
+          initialPostImage={post.post_img}
+          authorName={`${post.users.first_name} ${post.users.last_name}`}
+          authorAvatar={post.users.profile_picture}
+          createdAt={post.created_at}
+          onEditComplete={handleEditComplete}
+        />
+      </div>
+    </div>
   );
 }
