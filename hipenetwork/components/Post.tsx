@@ -59,7 +59,7 @@ export default function Post({
   };
 
   return (
-    <Card className="mx-auto mb-6 w-full max-w-2xl bg-white p-4">
+    <Card className="w-full max-w-2xl p-4 mx-auto mb-6 bg-white">
       <CardHeader className="flex flex-row items-center space-x-4">
         <Avatar
           className="cursor-pointer"
@@ -89,7 +89,7 @@ export default function Post({
         <h3 className="mb-2 text-xl font-semibold">{title}</h3>
         <p className="mb-4 whitespace-pre-wrap">{description}</p>
         {postImage && (
-          <div className="relative h-96 w-full">
+          <div className="relative w-full h-96">
             <Image
               src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/posts/${postImage}`}
               alt={title}
@@ -99,7 +99,7 @@ export default function Post({
             />
           </div>
         )}
-        <div className="mt-4 flex items-center space-x-4">
+        <div className="flex items-center mt-4 space-x-4">
           <LikeButton
             postId={id}
             currentUserId={currentUserId}
@@ -108,7 +108,11 @@ export default function Post({
           <span>{likesCount} likes</span>
           <span>{commentsCount} comments</span>
         </div>
-        <CommentSection postId={id} currentUserId={currentUserId} />
+        <CommentSection
+          postId={id}
+          currentUserId={currentUserId}
+          postAuthorId={authorId}
+        />
       </CardContent>
     </Card>
   );

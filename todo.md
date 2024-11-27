@@ -13,7 +13,7 @@
 
 ## Posts
 
-- allow users to delete comments
+-[x] allow users to delete comments
 
 ## Chatbot
 

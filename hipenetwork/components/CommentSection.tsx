@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { X } from "lucide-react";
 
 interface Comment {
   id: string;
@@ -21,11 +22,13 @@ interface Comment {
 interface CommentSectionProps {
   postId: string;
   currentUserId: string;
+  postAuthorId: string;
 }
 
 export default function CommentSection({
   postId,
   currentUserId,
+  postAuthorId,
 }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -84,10 +87,23 @@ export default function CommentSection({
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    const { error } = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", commentId);
+
+    if (error) {
+      console.error("Error deleting comment:", error);
+    } else {
+      fetchComments();
+    }
+  };
+
   return (
     <div className="mt-4">
       <h3 className="mb-2 text-lg font-semibold">Comments</h3>
-      <form onSubmit={handleSubmitComment} className="mb-4 flex space-x-2">
+      <form onSubmit={handleSubmitComment} className="flex mb-4 space-x-2">
         <Input
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
@@ -99,7 +115,7 @@ export default function CommentSection({
       </form>
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex space-x-2">
+          <div key={comment.id} className="flex space-x-2 group">
             <Avatar>
               <AvatarImage
                 src={comment.user?.profile_picture || undefined}
@@ -115,7 +131,7 @@ export default function CommentSection({
                   : "U"}
               </AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex-grow">
               <p className="font-semibold">
                 {comment.user
                   ? `${comment.user.first_name} ${comment.user.last_name}`
@@ -126,6 +142,17 @@ export default function CommentSection({
                 {new Date(comment.created_at).toLocaleString()}
               </p>
             </div>
+            {(currentUserId === comment.user?.id ||
+              currentUserId === postAuthorId) && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="w-8 h-8 text-white bg-red-500 hover:bg-red-400"
+                onClick={() => handleDeleteComment(comment.id)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         ))}
       </div>
