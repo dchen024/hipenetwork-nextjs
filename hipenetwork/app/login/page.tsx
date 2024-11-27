@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { supabase } from "@/utils/supabase/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,20 +11,15 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
+  const [showValidation, setShowValidation] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const isEmailValid = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
   const isPasswordValid = (password: string) => {
     const minLength = 8;
@@ -42,8 +38,15 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
-    if (!isEmailValid(email)) {
-      setError("Invalid email format");
+    setShowValidation(true);
+
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address");
       return;
     }
 
@@ -63,57 +66,60 @@ export default function Login() {
     });
 
     if (error) {
-      setError(error.message);
+      setError(error.message || "An unknown error occurred");
     } else {
-      setTimeout(() => {
-        router.push("/home"); // Redirect to home after login
-      }, 500);
+      router.push("/home");
     }
 
     setLoading(false);
   };
 
-  // Function to handle OAuth login (GitHub, Google, LinkedIn)
+  // Function to handle OAuth login
   const handleOAuthLogin = async (
     provider: "github" | "google" | "linkedin_oidc",
   ) => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+      },
     });
 
     if (error) {
-      console.error(`Error logging in with ${provider}:`, error.message);
-    } else {
-      // router.push("/home");
+      console.error(
+        `Error logging in with ${provider}:`,
+        error.message || "An unknown error occurred",
+      );
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      {/* Card component wrapping the login form */}
-      <Card className="w-full max-w-md">
+    <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <Card className="w-full max-w-md bg-white dark:bg-blacksection">
         <CardHeader>
-          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
+          <CardTitle className="mb-4 text-center text-2xl font-semibold text-black dark:text-white">
             Login
           </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Form for Email/Password Login */}
           <Input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={!email ? "border-red-500" : ""}
+            className={
+              showValidation && (!email || !email.includes("@"))
+                ? "border-red-500"
+                : ""
+            }
           />
           <Input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={!password ? "border-red-500" : ""}
+            className={showValidation && !password ? "border-red-500" : ""}
           />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
@@ -122,37 +128,27 @@ export default function Login() {
             variant="default"
             onClick={handleLogin}
             disabled={loading}
-            className="w-full text-black dark:text-white"
+            className="w-full bg-primary text-white dark:bg-btndark dark:text-white"
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">
-          {/* OAuth Buttons for GitHub, Google, and LinkedIn */}
-
           <p className="dark:text-white">or</p>
           <Button
             variant="outline"
             onClick={() => handleOAuthLogin("linkedin_oidc")}
-            className="w-full text-black dark:text-white"
+            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
           >
-            Sign in with LinkedIn
+            Login with LinkedIn
           </Button>
-          {/* <Button
-            variant="outline"
-            onClick={() => handleOAuthLogin("github")}
-            className="w-full text-black dark:text-white"
-          >
-            Sign in with GitHub
-          </Button> */}
-
           <Button
             variant="outline"
             onClick={() => handleOAuthLogin("google")}
-            className="w-full text-black dark:text-white"
+            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
           >
-            Sign in with Google
+            Login with Google
           </Button>
         </CardFooter>
       </Card>
