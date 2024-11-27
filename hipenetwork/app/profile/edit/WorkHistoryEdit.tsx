@@ -124,8 +124,8 @@ export default function WorkHistoryEdit({ user }: WorkHistoryEditProps) {
       ) : (
         <ul className="space-y-6">
           {workHistory.map((job, index) => (
-            <li key={index} className="border-b pb-4 last:border-b-0">
-              <div className="mb-2 flex items-center justify-between">
+            <li key={index} className="pb-4 border-b last:border-b-0">
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   {job.company_img && (
                     <Image
@@ -145,7 +145,7 @@ export default function WorkHistoryEdit({ user }: WorkHistoryEditProps) {
                   onClick={() => handleDelete(index)}
                   variant="destructive"
                   size="sm"
-                  className="rounded-md bg-red-500 text-white"
+                  className="text-white bg-red-500 rounded-md"
                 >
                   Delete
                 </Button>
@@ -184,7 +184,7 @@ export default function WorkHistoryEdit({ user }: WorkHistoryEditProps) {
             type="file"
             name="company_image"
             onChange={handleFileChange}
-            className="mt-1 block w-full"
+            className="block w-full mt-1"
           />
         </div>
         <Input
@@ -205,15 +205,11 @@ export default function WorkHistoryEdit({ user }: WorkHistoryEditProps) {
           value={newEntry.description}
           onChange={handleInputChange}
           placeholder="Job Description"
-          className="w-full rounded-md border p-2"
+          className="w-full p-2 border rounded-md"
           rows={4}
           required
         />
-        <Button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-500 text-white"
-        >
+        <Button type="submit" disabled={loading} className="text-white">
           {loading ? "Adding..." : "Add Work History Entry"}
         </Button>
       </form>

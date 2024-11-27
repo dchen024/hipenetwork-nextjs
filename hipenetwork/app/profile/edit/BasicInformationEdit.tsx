@@ -85,7 +85,7 @@ export default function BasicInformationEdit({
           name="first_name"
           value={formData.first_name || ""}
           onChange={handleChange}
-          className="mt-1 block w-full"
+          className="block w-full mt-1"
         />
       </div>
       <div>
@@ -97,7 +97,7 @@ export default function BasicInformationEdit({
           name="last_name"
           value={formData.last_name || ""}
           onChange={handleChange}
-          className="mt-1 block w-full"
+          className="block w-full mt-1"
         />
       </div>
       <div>
@@ -107,7 +107,7 @@ export default function BasicInformationEdit({
           name="email"
           value={formData.email || ""}
           onChange={handleChange}
-          className="mt-1 block w-full"
+          className="block w-full mt-1"
         />
       </div>
       <div>
@@ -119,7 +119,7 @@ export default function BasicInformationEdit({
           name="username"
           value={formData.username || ""}
           onChange={handleChange}
-          className="mt-1 block w-full"
+          className="block w-full mt-1"
         />
       </div>
       <div>
@@ -130,7 +130,7 @@ export default function BasicInformationEdit({
           type="file"
           name="profile_image"
           onChange={handleFileChange}
-          className="mt-1 block w-full"
+          className="block w-full mt-1"
         />
       </div>
       <div>
@@ -141,14 +141,14 @@ export default function BasicInformationEdit({
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border p-2"
+          className="block w-full p-2 mt-1 border rounded-md"
           rows={4}
         />
       </div>
       <div className="flex flex-col items-start gap-2">
         <Button
           type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white"
+          className="text-white"
         >
           {loading ? "Saving..." : "Update Basic Information"}
         </Button>

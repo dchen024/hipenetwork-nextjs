@@ -2,7 +2,7 @@
 
 ## Log In
 
-- [x]remove auto red (just add check if empty ignore)
+- [x] remove auto red (just add check if empty ignore)
 
 ## Profile
 
