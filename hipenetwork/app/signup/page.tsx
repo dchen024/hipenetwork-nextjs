@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const router = useRouter();
+  const [showValidation, setShowValidation] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -41,6 +42,8 @@ export default function SignUp() {
 
   // Function to handle email/password sign-up
   const handleSignUp = async () => {
+    setShowValidation(true);
+
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       setError("All fields are required");
       return;
@@ -111,11 +114,11 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
       {/* Card component wrapping the sign-up form */}
       <Card className="w-full max-w-md bg-white dark:bg-blacksection">
         <CardHeader>
-          <CardTitle className="mb-4 text-2xl font-semibold text-center text-black dark:text-white">
+          <CardTitle className="mb-4 text-center text-2xl font-semibold text-black dark:text-white">
             Sign Up
           </CardTitle>
         </CardHeader>
@@ -127,35 +130,48 @@ export default function SignUp() {
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className={!firstName ? "border-red-500" : ""}
+            className={showValidation && !firstName ? "border-red-500" : ""}
           />
           <Input
             type="text"
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className={!lastName ? "border-red-500" : ""}
+            className={showValidation && !lastName ? "border-red-500" : ""}
           />
           <Input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={!email ? "border-red-500" : ""}
+            className={
+              showValidation && (!email || !email.includes("@"))
+                ? "border-red-500"
+                : ""
+            }
           />
           <Input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={!password ? "border-red-500" : ""}
+            className={
+              showValidation && (!password || !isPasswordValid(password))
+                ? "border-red-500"
+                : ""
+            }
           />
           <Input
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className={!confirmPassword ? "border-red-500" : ""}
+            className={
+              showValidation &&
+              (!confirmPassword || password !== confirmPassword)
+                ? "border-red-500"
+                : ""
+            }
           />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
@@ -164,7 +180,7 @@ export default function SignUp() {
             variant="default"
             onClick={handleSignUp}
             disabled={loading}
-            className="w-full text-white bg-primary dark:bg-btndark dark:text-white"
+            className="w-full bg-primary text-white dark:bg-btndark dark:text-white"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </Button>
@@ -176,7 +192,7 @@ export default function SignUp() {
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("linkedin_oidc")}
-            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
           >
             Sign up with LinkedIn
           </Button>
@@ -191,7 +207,7 @@ export default function SignUp() {
           <Button
             variant="outline"
             onClick={() => handleOAuthSignUp("google")}
-            className="w-full text-black border border-gray-300 dark:border-strokedark dark:text-white"
+            className="w-full border border-gray-300 text-black dark:border-strokedark dark:text-white"
           >
             Sign up with Google
           </Button>
