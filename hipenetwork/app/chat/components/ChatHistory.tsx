@@ -25,7 +25,6 @@ interface ChatRoom {
       last_name: string;
     };
   }[];
-  latest_message_time: string;
 }
 
 export default function ChatHistory() {
@@ -41,38 +40,7 @@ export default function ChatHistory() {
       if (!user) return;
       setCurrentUserId(user.id);
 
-      // First, get the latest message timestamp for each room
-      const { data: latestMessages, error: latestMessagesError } =
-        await supabase
-          .from("messages")
-          .select(
-            `
-          room_id,
-          created_at
-        `,
-          )
-          .in(
-            "room_id",
-            (
-              await supabase
-                .from("room_participants")
-                .select("room_id")
-                .eq("user_id", user.id)
-            ).data?.map((rp) => rp.room_id) || [],
-          )
-          .order("created_at", { ascending: false });
-
-      if (latestMessagesError) {
-        console.error("Error fetching latest messages:", latestMessagesError);
-        return;
-      }
-
-      // Create a map of room_id to latest message time
-      const latestMessageTimes = new Map(
-        latestMessages?.map((msg) => [msg.room_id, msg.created_at]),
-      );
-
-      // Fetch rooms with messages
+      // Get rooms where the current user is a participant
       const { data: roomsData, error } = await supabase
         .from("rooms")
         .select(
@@ -98,24 +66,34 @@ export default function ChatHistory() {
           )
         `,
         )
-        .eq("room_participants.user_id", user.id);
+        .in(
+          "id",
+          (
+            await supabase
+              .from("room_participants")
+              .select("room_id")
+              .eq("user_id", user.id)
+          ).data?.map((rp) => rp.room_id) || [],
+        );
 
       if (error) {
         console.error("Error fetching rooms:", error);
         return;
       }
 
-      // Process and sort rooms by latest message time
+      // Process rooms and sort by updated_at
       const processedRooms = roomsData
         .map((room) => ({
           ...room,
-          latest_message_time:
-            latestMessageTimes.get(room.id) || room.updated_at,
+          messages: room.messages.sort(
+            (a, b) =>
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime(),
+          ),
         }))
         .sort(
           (a, b) =>
-            new Date(b.latest_message_time).getTime() -
-            new Date(a.latest_message_time).getTime(),
+            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
         );
 
       setRooms(processedRooms);
@@ -154,52 +132,17 @@ export default function ChatHistory() {
   };
 
   const formatTimestamp = (timestamp: string) => {
-    // Ensure we're parsing the UTC timestamp correctly by appending 'Z' if it's not already there
-    const utcTimestamp = timestamp.endsWith("Z") ? timestamp : timestamp + "Z";
-    const date = new Date(utcTimestamp);
-    const now = new Date();
+    // Append 'Z' to indicate UTC if timestamp doesn't have timezone info
+    const date = new Date(
+      timestamp.endsWith("Z") ? timestamp : timestamp + "Z",
+    );
 
-    const isToday = date.toLocaleDateString() === now.toLocaleDateString();
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const isYesterday =
-      date.toLocaleDateString() === yesterday.toLocaleDateString();
-
-    // Format time in local timezone
-    const timeString = date.toLocaleTimeString([], {
+    // Only return the time
+    return date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
     });
-
-    if (isToday) {
-      return timeString;
-    }
-
-    if (isYesterday) {
-      return `Yesterday ${timeString}`;
-    }
-
-    if (date.getFullYear() === now.getFullYear()) {
-      // If same year, show "Mon 3:30 PM"
-      return (
-        date.toLocaleDateString([], {
-          weekday: "short",
-        }) +
-        " " +
-        timeString
-      );
-    }
-
-    // If different year, show "Mar 15 3:30 PM"
-    return (
-      date.toLocaleDateString([], {
-        month: "short",
-        day: "numeric",
-      }) +
-      " " +
-      timeString
-    );
   };
 
   return (
@@ -221,7 +164,7 @@ export default function ChatHistory() {
                 <div className="flex items-start justify-between">
                   <div className="font-medium">{getRoomDisplayName(room)}</div>
                   <div className="text-xs text-gray-500">
-                    {formatTimestamp(room.latest_message_time)}
+                    {formatTimestamp(room.updated_at)}
                   </div>
                 </div>
                 {lastMessage && (
