@@ -62,6 +62,14 @@ export default function NavBar() {
               </Button>
 
               <Button
+                onClick={() => router.push("/chat")}
+                variant="default"
+                className="text-white bg-orange-500 hover:bg-orange-600"
+              >
+                Chat
+              </Button>
+
+              <Button
                 onClick={() => router.push("/create-post")}
                 variant="default"
                 className="text-white bg-green-500 hover:bg-green-600"

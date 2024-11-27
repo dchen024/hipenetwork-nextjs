@@ -21,18 +21,17 @@
 
 ## Chat
 
-- you should not be able to view everyones chats :rofl:
-- add chat history when you create new room
-- chat history should display most recent message not first message
+- [x] you should not be able to view everyones chats :rofl:
+- [ ] add chat history when you create new room
+- [x] chat history should display most recent message not first message
 - add online effect
-- delete messages
-- edit messages
+- [ ] delete messages
+- [ ] edit messages
 
 ## NavBar
 
 - remake navbar
-- add /chat
-- add navbar to /chat
+- [x] add navbar to /chat
 
 ## Landing Page
 
