@@ -24,7 +24,7 @@
 - [x] you should not be able to view everyones chats :rofl:
 - [ ] add chat history when you create new room
 - [x] chat history should display most recent message not first message
-- add online effect
+- [ ] add online effect
 - [ ] delete messages
 - [ ] edit messages
 

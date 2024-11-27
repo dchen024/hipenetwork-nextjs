@@ -136,12 +136,47 @@ export default function ChatHistory() {
     const date = new Date(
       timestamp.endsWith("Z") ? timestamp : timestamp + "Z",
     );
+    const now = new Date();
 
-    // Only return the time
-    return date.toLocaleTimeString([], {
+    const isToday = date.toLocaleDateString() === now.toLocaleDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isYesterday =
+      date.toLocaleDateString() === yesterday.toLocaleDateString();
+
+    const timeString = date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
+    });
+
+    if (isToday) {
+      return timeString;
+    }
+
+    if (isYesterday) {
+      return `Yesterday`;
+    }
+
+    const diffDays = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    if (diffDays < 7) {
+      return date.toLocaleDateString([], { weekday: "short" });
+    }
+
+    if (date.getFullYear() === now.getFullYear()) {
+      return date.toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    return date.toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
