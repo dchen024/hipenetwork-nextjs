@@ -20,6 +20,17 @@ export default function Message({
   isCurrentUser,
   avatarUrl,
 }: MessageProps) {
+  const formatMessageTime = (timestamp: string) => {
+    const date = new Date(
+      timestamp.endsWith("Z") ? timestamp : timestamp + "Z",
+    );
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   return (
     <div
       className={`flex items-end gap-2 ${
@@ -53,10 +64,7 @@ export default function Message({
       >
         <p className="text-sm">{content}</p>
         <span className="block mt-1 text-xs opacity-70">
-          {new Date(created_at).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {formatMessageTime(created_at)}
         </span>
       </div>
 
