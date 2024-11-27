@@ -9,6 +9,7 @@
 - when a user first logs in they should be forced to make a profile
 - auto populate fields using google oauth data
 - [x] let users view profiles by clicking on image
+- [x] change profile ui
 
 ## Posts
 

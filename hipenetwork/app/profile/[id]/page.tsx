@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { User } from "@/types/user";
-import { BasicInformation } from "../BasicInformation";
 import { WorkHistory } from "../WorkHistory";
 import { EducationHistory } from "../EducationHistory";
 import { SkillSection } from "../SkillSection";
@@ -23,9 +22,11 @@ export default function UserProfilePage({
         const response = await fetch(`/api/users/${params.id}`);
         if (!response.ok) throw new Error("Failed to fetch user");
         const data = await response.json();
+        console.log("User Data:", data);
         setUser(data);
       } catch (err) {
         setError("Failed to fetch user data");
+        console.error("Error fetching user:", err);
       } finally {
         setLoading(false);
       }
@@ -42,11 +43,35 @@ export default function UserProfilePage({
     <>
       <NavBar />
       <div className="container mx-auto p-4">
-        <h1 className="mb-4 text-2xl font-bold">Profile</h1>
-        <BasicInformation user={user} />
-        <WorkHistory workHistory={user.work_history || []} />
-        <EducationHistory educationHistory={user.education_history || []} />
-        <SkillSection skills={user.skills || []} />
+        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+          <img
+            src={user.profile_picture || ""}
+            alt={`${user.first_name} ${user.last_name}`}
+            className="mb-4 h-32 w-32 rounded-full"
+          />
+          <h1 className="mb-2 text-3xl font-bold">{`${user.first_name} ${user.last_name}`}</h1>
+          <p className="text-gray-600">{user.description}</p>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="col-span-2">
+            <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+              <h2 className="mb-4 text-xl font-semibold">Work History</h2>
+              <WorkHistory workHistory={user.work_history || []} />
+            </div>
+            <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+              <h2 className="mb-4 text-xl font-semibold">Education</h2>
+              <EducationHistory
+                educationHistory={user.education_history || []}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+              <h2 className="mb-4 text-xl font-semibold">Skills</h2>
+              <SkillSection skills={user.skills || []} />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
