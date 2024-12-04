@@ -121,6 +121,16 @@ export default function Chat({ roomId }: ChatProps) {
             setTimeout(() => {
               scrollToBottom();
             }, 100);
+          } else if (payload.eventType === "UPDATE") {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === payload.new.id ? { ...msg, ...payload.new } : msg,
+              ),
+            );
+          } else if (payload.eventType === "DELETE") {
+            setMessages((prev) =>
+              prev.filter((msg) => msg.id !== payload.old.id),
+            );
           }
         },
       )
@@ -265,6 +275,46 @@ export default function Chat({ roomId }: ChatProps) {
     }
   };
 
+  const handleEditMessage = async (messageId: string, newContent: string) => {
+    try {
+      const { error } = await supabase
+        .from("messages")
+        .update({ content: newContent })
+        .eq("id", messageId)
+        .eq("sender_id", currentUser?.id); // Security check
+
+      if (error) throw error;
+
+      // Update local state
+      setMessages(
+        messages.map((msg) =>
+          msg.id === messageId ? { ...msg, content: newContent } : msg,
+        ),
+      );
+    } catch (error) {
+      console.error("Error editing message:", error);
+    }
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    if (!confirm("Are you sure you want to delete this message?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("messages")
+        .delete()
+        .eq("id", messageId)
+        .eq("sender_id", currentUser?.id); // Security check
+
+      if (error) throw error;
+
+      // Update local state
+      setMessages(messages.filter((msg) => msg.id !== messageId));
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+  };
+
   return (
     <div className="mx-auto flex h-[80vh] max-w-2xl flex-col rounded-lg bg-white shadow-lg">
       {/* Chat Header */}
@@ -296,6 +346,8 @@ export default function Chat({ roomId }: ChatProps) {
             created_at={msg.created_at}
             isCurrentUser={currentUser?.id === msg.sender_id}
             avatarUrl={participantProfiles[msg.sender_id]}
+            onEdit={(newContent) => handleEditMessage(msg.id, newContent)}
+            onDelete={() => handleDeleteMessage(msg.id)}
           />
         ))}
         <div ref={messagesEndRef} />
