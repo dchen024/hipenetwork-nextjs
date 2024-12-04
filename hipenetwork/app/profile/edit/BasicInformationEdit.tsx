@@ -62,6 +62,7 @@ export default function BasicInformationEdit({
         username: formData.username,
         profile_picture: profilePictureUrl,
         description: formData.description,
+        is_profile_complete: true,
       })
       .eq("id", user.id);
 
@@ -85,7 +86,7 @@ export default function BasicInformationEdit({
           name="first_name"
           value={formData.first_name || ""}
           onChange={handleChange}
-          className="block w-full mt-1"
+          className="mt-1 block w-full"
         />
       </div>
       <div>
@@ -97,7 +98,7 @@ export default function BasicInformationEdit({
           name="last_name"
           value={formData.last_name || ""}
           onChange={handleChange}
-          className="block w-full mt-1"
+          className="mt-1 block w-full"
         />
       </div>
       <div>
@@ -107,7 +108,7 @@ export default function BasicInformationEdit({
           name="email"
           value={formData.email || ""}
           onChange={handleChange}
-          className="block w-full mt-1"
+          className="mt-1 block w-full"
         />
       </div>
       <div>
@@ -119,7 +120,7 @@ export default function BasicInformationEdit({
           name="username"
           value={formData.username || ""}
           onChange={handleChange}
-          className="block w-full mt-1"
+          className="mt-1 block w-full"
         />
       </div>
       <div>
@@ -130,7 +131,7 @@ export default function BasicInformationEdit({
           type="file"
           name="profile_image"
           onChange={handleFileChange}
-          className="block w-full mt-1"
+          className="mt-1 block w-full"
         />
       </div>
       <div>
@@ -141,15 +142,12 @@ export default function BasicInformationEdit({
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
-          className="block w-full p-2 mt-1 border rounded-md"
+          className="mt-1 block w-full rounded-md border p-2"
           rows={4}
         />
       </div>
       <div className="flex flex-col items-start gap-2">
-        <Button
-          type="submit"
-          className="text-white"
-        >
+        <Button type="submit" className="text-white">
           {loading ? "Saving..." : "Update Basic Information"}
         </Button>
       </div>
